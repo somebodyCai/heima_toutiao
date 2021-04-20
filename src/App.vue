@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import login from "./views/login";
+import login from "./views/user/login";
 export default {
   name: "App",
   components: {
@@ -15,4 +15,5 @@ export default {
 </script>
 
 <style lang="less">
+@import url("http://at.alicdn.com/t/font_1426139_h6vn3jbl5q.css");
 </style>

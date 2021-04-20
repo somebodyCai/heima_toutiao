@@ -7,3 +7,11 @@ export const userlogin = function (data) {
         data
     })
 }
+
+export const userRegister = function (data) {
+    return axios({
+        url: '/register',
+        method: 'post',
+        data
+    })
+}
