@@ -58,7 +58,7 @@ export default {
             if (res.data.message == "登录成功") {
               this.$toast.success("登录成功");
               localStorage.setItem("haimatoken", res.data.data.token);
-              this.$router.push("index");
+              this.$router.push({path:`/personal/${res.data.data.user.id}`});
             } else {
               this.$toast(res.data.message);
             }
@@ -73,8 +73,8 @@ export default {
   data() {
     return {
       user: {
-        username: "",
-        password: "",
+        username: "13877665544",
+        password: "123456",
       },
     };
   },

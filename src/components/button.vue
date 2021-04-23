@@ -1,5 +1,13 @@
 <template>
-  <div class="btn" @click="handlerClick" :class="{success:btn_sty=='success',danger:btn_sty=='danger',primary:btn_sty=='primary',}">
+  <div
+    class="btn"
+    @click="handlerClick"
+    :class="{
+      success: btn_sty == 'success',
+      danger: btn_sty == 'danger',
+      primary: btn_sty == 'primary',
+    }"
+  >
     <slot></slot>
   </div>
 </template>
@@ -16,11 +24,11 @@ export default {
       this.$emit("click", e);
     },
   },
-  props:{
-    btn_sty:{
-      type:String,
-    }
-  }
+  props: {
+    btn_sty: {
+      type: String,
+    },
+  },
 };
 </script>
 
@@ -36,6 +44,7 @@ export default {
   color: #fff;
   font-weight: bold;
   font-size: 20px;
+  margin: 0 auto;
 }
 .success {
   background-color: rgb(34, 168, 21);

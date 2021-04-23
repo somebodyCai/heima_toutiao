@@ -15,3 +15,17 @@ export const userRegister = function (data) {
         data
     })
 }
+export const updateUserInfo = function (id, data) {
+    return axios({
+        url: '/user_update/' + id,
+        method: 'post',
+        data
+    })
+}
+
+export const getUserInfo = function (id) {
+    return axios({
+        url: '/user/' + id,
+        // headers: { 'Authorization': localStorage.getItem('haimatoken') }
+    })
+}

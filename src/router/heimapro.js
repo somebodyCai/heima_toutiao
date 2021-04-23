@@ -42,6 +42,8 @@
 
 import Vue from 'vue'
 
+import { Toast } from 'vant'
+
 import VueRouter from 'vue-router'
 
 Vue.use(VueRouter)
@@ -63,11 +65,37 @@ const router = new VueRouter({
             redirect: { name: 'index' }
         },
         {
-            path:'/register',
-            name:'register',
-            component:()=>import('@/views/user/register.vue')
-        }
+            path: '/register',
+            name: 'register',
+            component: () => import('@/views/user/register.vue')
+        },
+        {
+            path: '/personal/:id',
+            name: 'personal',
+            component: () => import('@/views/user/personal.vue')
+        },
+        {
+            path: '/edit_profile/:id',
+            name: 'edit_profile',
+            component: () => import('@/views/user/edit_profile.vue')
+        },
     ]
 })
+
+router.beforeEach((to, from, next) => {
+    if (to.path.indexOf('/personal/') != -1) {
+        let token = localStorage.getItem('haimatoken')
+        if (token) {
+            next()
+        } else {
+            Toast('未登录，请先登录')
+            next({ name: 'login ' })
+        }
+    } else {
+        next()
+    }
+})
+
+
 
 export default router

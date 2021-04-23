@@ -5,10 +5,10 @@ import '@/styles/reset.less'
 import router from './router/heimapro.js'
 
 // 引入vant 框架
-import { Toast } from 'vant'
+import { Toast, Icon, Uploader, Dialog, Field, ActionSheet, Tab, Tabs } from 'vant'
 import App from './App.vue'
 
-Vue.use(Toast)
+Vue.use(Toast).use(Icon).use(Uploader).use(Dialog).use(Field).use(ActionSheet).use(Tabs).use(Tab)
 
 Vue.config.productionTip = false
 
