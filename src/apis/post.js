@@ -1,7 +1,8 @@
 import axios from '../utils/myaxios.js'
 
-export const getArticleList = function (id) {
+export const getArticleList = function (params) {
     return axios({
-        url: `/post?category=${id}`,
+        url: `/post?category`,
+        params
     })
 }

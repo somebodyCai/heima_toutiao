@@ -19,11 +19,22 @@
         v-for="(value, index) in cateList"
         :key="value.id"
       >
-        <article-vue
-          v-for="value in value.artList"
-          :key="value.id"
-          :post="value"
-        ></article-vue>
+        <van-list
+          v-model="value.loading"
+          :finished="value.finished"
+          finished-text="没有更多了"
+          @load="onLoad"
+          :immediate-check="false"
+          offset="5"
+        >
+          <van-pull-refresh v-model="value.isLoading" @refresh="onRefresh">
+            <article-vue
+              v-for="value in value.artList"
+              :key="value.id"
+              :post="value"
+            ></article-vue>
+          </van-pull-refresh>
+        </van-list>
       </van-tab>
     </van-tabs>
   </div>
@@ -41,24 +52,33 @@ export default {
       // articleCate: [],
     };
   },
+  // 当页面加载时加载栏目导航数据 与 默认栏目 --头条--的数据
   async mounted() {
     let res = await getCateList();
     this.cateList = res.data.data;
-    // console.log(res.data.data);
+    // console.log(this.cateList);
+    // 1.1对所有文章列表数据进行改造，添加一个空数组在每个列表属性中
+    // 1.2 给每个栏目文章添加默认每页篇数 pageSize:6 以及添加默认显示页数 pageIndex:1
 
-    // 1.对所有文章列表数据进行改造，添加一个空数组在每个列表属性中
     this.cateList = this.cateList.map((v) => {
-      return { ...v, artList: [] };
+      return {
+        ...v,
+        artList: [],
+        pageIndex: 1, //设置请求获取的文章页码 默认获取 第一页
+        pageSize: 6, //设置一页显示显示的文章数目
+        finished: false, //
+        loading: false, //设置上拉加载状态 默认为false
+        isLoading: false, //设下拉加载状态 默认为 false
+      };
     });
-
-    this.getList();
+    this.getArtList();
   },
+  // 监听栏目索引的变化，通过索引对应数组的索引获取到数组的 id 发送请求
   watch: {
     async active() {
-      // console.log(this.cateList[this.active].artList.length);
-      // 3.当只有时第一次点击栏目时，才发送请求
+      // 3.当数栏目对应文章详情的数组中无数组时才发送 axios 请求
       if (this.cateList[this.active].artList.length == 0) {
-        this.getList();
+        this.getArtList();
       }
     },
   },
@@ -66,15 +86,43 @@ export default {
     articleVue,
   },
   methods: {
-    async getList() {
-      // console.log(this.cateList[this.active]);
+    async getArtList() {
+      // 2.将请求获取到的栏目文章详情添加的对应空白格数组中
       let id = this.cateList[this.active].id;
-      let art = await getArticleList(id);
-      // 2.当改变索引获取文章列表时，将请求获取到的文章添加到该栏目的对应空数组中
-      this.cateList[this.active].artList = art.data.data;
+      // 发送请求，将响应获取到的数据存在 artArr 数组中
+      let artArr = (
+        await getArticleList({
+          category: id, //栏目 id 参数
+          pageIndex: this.cateList[this.active].pageIndex, //设置页码参数
+          pageSize: this.cateList[this.active].pageSize, //设置一页显示的文章数目
+        })
+      ).data.data;
+      // 将获取到的新闻数据追加到当前栏目的数组中
+      this.cateList[this.active].artList.push(...artArr);
+      // 重置上拉状态
+      this.cateList[this.active].loading = false;
+      // 重置下拉状态
+      this.cateList[this.active].isLoading = false;
+      // 判断是否上拉加载完所有数据
+      if (artArr.length < this.cateList[this.active].pageSize) {
+        this.cateList[this.active].finished = true;
+      }
+    },
+    onLoad() {
+      this.cateList[this.active].pageIndex++;
+      // 上拉后页码 加1 重新发送请求
+      this.getArtList();
+    },
+    onRefresh() {
+      // 页码重置
+      this.cateList[this.active].pageIndex = 1;
+      // 清空原有栏目的新闻数据
+      this.cateList[this.active].artList.length = 0;
 
-      // console.log(this.cateList);
-      // console.log((await getArticleList(id)).data.data);
+      // 将有可能加载完成的数据状态 修改为 false
+      this.cateList[this.active].finished = false;
+      // 发送 axios 请求
+      this.getArtList();
     },
   },
 };
