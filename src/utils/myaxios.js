@@ -5,7 +5,7 @@ axios.defaults.baseURL = 'http://157.122.54.189:9083'
 // 设置请求拦截器
 axios.interceptors.request.use(function (config) {
     // 在发送请求之前做些什么
-    let token = localStorage.getItem('haimatoken')
+    let token = localStorage.getItem('heimatoken')
     if (token) {
         // 添加请求头设置 设置身份认证 token 
         config.headers.Authorization = token
@@ -19,8 +19,11 @@ axios.interceptors.request.use(function (config) {
 // 添加响应拦截器
 axios.interceptors.response.use(function (response) {
     // console.log(response.data.message);
-    if (response.data.message == '用户信息验证失败!') {
-        location.href = '#/login'
+    if (response.data.message == '用户信息验证失败!' || response.data.message == '用户信息验证失败') {
+
+        let from = window.location.href
+
+        location.href = '#/login?redirect_url=' + from
     }
     // 对响应数据做点什么
     return response;

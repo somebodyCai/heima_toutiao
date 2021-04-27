@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="single" v-if="post.type == 1 && post.cover.length < 3">
+    <div class="single" v-if="post.type == 1 && post.cover.length < 3" @click="$router.push({path:'/articleDetail/'+post.id})">
       <div class="left">
         <p class="content">{{ post.title }}</p>
         <p class="info">
@@ -11,7 +11,7 @@
       <img :src="post.cover[0].url" alt />
     </div>
 
-    <div class="single2" v-else-if="post.type === 2">
+    <div class="single2" v-else-if="post.type === 2" @click="$router.push({path:'/articleDetail/'+post.id})">
       <p class="content">{{ post.title }}</p>
       <div class="playarea">
         <img :src="post.cover[0].url" alt />
@@ -25,13 +25,13 @@
       </p>
     </div>
 
-    <div class="single3" v-else-if="post.type === 1 && post.cover.length >= 3">
+    <div class="single3" v-else-if="post.type === 1 && post.cover.length >= 3" @click="$router.push({path:'/articleDetail/'+post.id})">
       <p class="content">{{ post.title }}</p>
       <div class="imgs">
         <img
           :src="post.cover[index].url"
           alt
-          v-for="(item ,index) in post.cover"
+          v-for="(item, index) in post.cover"
           :key="item.id"
         />
       </div>
@@ -49,7 +49,7 @@ export default {
   props: {
     post: {
       type: Object,
-      require: true,
+      required: true,
     },
   },
   mounted() {

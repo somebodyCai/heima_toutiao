@@ -57,8 +57,21 @@ export default {
           .then((res) => {
             if (res.data.message == "登录成功") {
               this.$toast.success("登录成功");
-              localStorage.setItem("haimatoken", res.data.data.token);
-              this.$router.push({path:`/personal/${res.data.data.user.id}`});
+              localStorage.setItem("heimatoken", res.data.data.token);
+              localStorage.setItem("heimaUserId", res.data.data.user.id);
+
+              //获取当前路径 将=后的参数分割 获取
+              let redirect = window.location.href.split("=")[1];
+
+              if (redirect) {
+                //当该值存在 则跳回原地址
+                window.location.href = decodeURIComponent(redirect);
+              } else {
+                //当该值不存在 则跳到个人中心页面
+                this.$router.push({
+                  path: `/personal/${res.data.data.user.id}`,
+                });
+              }
             } else {
               this.$toast(res.data.message);
             }

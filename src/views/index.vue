@@ -8,7 +8,7 @@
         <van-icon name="search" />
         <span>搜索商品</span>
       </div>
-      <div class="user" @click="$router.push({ path: `/personal/${id}` })">
+      <div class="user" @click="jump">
         <van-icon name="manager-o" />
       </div>
     </div>
@@ -25,14 +25,15 @@
           finished-text="没有更多了"
           @load="onLoad"
           :immediate-check="false"
-          offset="5"
+          :offset="200"
         >
           <van-pull-refresh v-model="value.isLoading" @refresh="onRefresh">
             <article-vue
               v-for="value in value.artList"
               :key="value.id"
               :post="value"
-            ></article-vue>
+            >
+            </article-vue>
           </van-pull-refresh>
         </van-list>
       </van-tab>
@@ -43,11 +44,11 @@
 <script>
 import { getCateList } from "@/apis/category.js";
 import { getArticleList } from "@/apis/post";
-import articleVue from "../components/article.vue";
+import articleVue from "@/components/article.vue";
 export default {
   data() {
     return {
-      active: localStorage.getItem("haimatoken") ? 1 : 0,
+      active: localStorage.getItem("heimatoken") ? 1 : 0,
       cateList: [],
       // articleCate: [],
     };
@@ -56,7 +57,7 @@ export default {
   async mounted() {
     let res = await getCateList();
     this.cateList = res.data.data;
-    // console.log(this.cateList);
+    // console.log(res);
     // 1.1对所有文章列表数据进行改造，添加一个空数组在每个列表属性中
     // 1.2 给每个栏目文章添加默认每页篇数 pageSize:6 以及添加默认显示页数 pageIndex:1
 
@@ -123,6 +124,18 @@ export default {
       this.cateList[this.active].finished = false;
       // 发送 axios 请求
       this.getArtList();
+    },
+    // 点击个人中心页面跳转
+    jump() {
+      // 判断是否有id值
+      let id=localStorage.getItem('heimaUserId')
+      // 当id 存在正常跳转
+      if (id) {
+        this.$router.push({path:'/personal/'+id})
+      } else {
+        this.$toast("未登录，请先登录!");
+        this.$router.push({ name: "login" });
+      }
     },
   },
 };

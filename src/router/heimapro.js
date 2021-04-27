@@ -79,12 +79,34 @@ const router = new VueRouter({
             name: 'edit_profile',
             component: () => import('@/views/user/edit_profile.vue')
         },
+        {
+            path: '/articleDetail/:id',
+            name: 'articleDetail',
+            component: () => import('@/views/article/articleDetail.vue')
+        },
+        {
+            path: '/myfollw',
+            name: 'myfollw',
+            component: () => import('@/views/user/follow.vue')
+        },
+        {
+            path: '/mycollect',
+            name: 'mycollect',
+            component: () => import('@/views/user/collect.vue')
+        },
+        {
+            path: '/comment/:id',
+            name: 'comment',
+            component: () => import('@/views/comment.vue')
+        },
     ]
 })
 
+
+// 设置导航守卫
 router.beforeEach((to, from, next) => {
     if (to.path.indexOf('/personal/') != -1) {
-        let token = localStorage.getItem('haimatoken')
+        let token = localStorage.getItem('heimatoken')
         if (token) {
             next()
         } else {
