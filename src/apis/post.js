@@ -53,3 +53,11 @@ export const publishComment = (id, data) => {
         data,
     })
 }
+
+
+//文章搜索
+export const searchArticle = (keyword) => {
+    return axios({
+        url: '/post_search?keyword=' + keyword
+    })
+}
